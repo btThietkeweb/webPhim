@@ -1,15 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using WebPhimBTL.Models;
+using WebPhimBTL.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-var connecttionString = builder.Configuration.GetConnectionString("DBPhim");
-builder.Services.AddDbContext<DbphimContext>(x => x.UseSqlServer(connecttionString));
-builder.Services.AddSession();
+var ConnectString = builder.Configuration.GetConnectionString("DbphimContext");
+builder.Services.AddDbContext<DbphimContext>(x => x.UseSqlServer(ConnectString));
+builder.Services.AddScoped<ILoaiPhimRepository, LoaiPhimRepository>();
+builder.Services.AddScoped<ITheLoaiRespository, TheLoaiRespository>();
 
+builder.Services.AddSession();
 
 var app = builder.Build();
 
@@ -27,10 +30,10 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=LogIn}/{action=Login}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseSession();
 
 app.Run();

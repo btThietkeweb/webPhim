@@ -15,8 +15,6 @@ public partial class Episode
 
     public int? LuotXem { get; set; }
 
-    public int? IsDeleted { get; set; }
-
     public virtual TPhim? MaPhimNavigation { get; set; }
 
     public virtual ICollection<ThoiLuongDaXem> ThoiLuongDaXems { get; } = new List<ThoiLuongDaXem>();

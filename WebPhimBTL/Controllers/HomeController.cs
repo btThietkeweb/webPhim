@@ -1,51 +1,42 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using WebPhimBTL.Models;
+using WebPhimBTL.ViewModel;
 
-namespace WebPhimBTL.Controllers
+namespace WebMovieBTL.Controllers
 {
     public class HomeController : Controller
     {
-        DbphimContext db=new DbphimContext();
+        DbphimContext db = new DbphimContext();
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
         }
-        public IActionResult Index()
+
+        public async Task<IActionResult> Index()
         {
-            return View();
-        }
-        [Route("thongtintaikhoan")]
-        public IActionResult ThongTinTaiKhoan(string tenTaiKhoan)
-        {
-            var taiKhoan = db.TaiKhoans.FirstOrDefault(x => x.TenTaiKhoan == tenTaiKhoan);
-            return View(taiKhoan);
+            //var a = SentimentAnalyzer.Sentiments.Predict("I am extremely satisfied with this product. It works exactly as described and has exceeded my expectations. The customer service team was also very helpful and responsive when I had a question. I would definitely recommend this product to anyone in need.").Score;
+
+            string name = "";
+            if (HttpContext.Session.GetString("UserName") != null)
+            {
+                name = HttpContext.Session.GetString("UserName");
+            }
+
+            //   int MaPhim = filmCode;
+            ViewBag.Name = name;
+            FilmHome filmHome = new FilmHome
+            {
+                topPhim = await db.TPhims.FromSqlRaw("dbo.Proc_Top5MovieByView").ToListAsync(),
+                phimmoi = await db.TPhims.FromSqlRaw("dbo.Proc_NewMovie").ToListAsync(),
+                theloaiphim = await db.TPhims.FromSqlRaw("dbo.Proc_GetMovies").ToListAsync()
+            };
+            return View(filmHome);
         }
 
-        [Route("SuaThongTin")]
-        [HttpGet]
-        public IActionResult SuaThongTin(string tenTaiKhoan)
-        {
-            var taiKhoan = db.TaiKhoans.Where(x => x.TenTaiKhoan == tenTaiKhoan).FirstOrDefault();
-            //var taiKhoan = db.TaiKhoans.Find(tenTaiKhoan);
-            return View(taiKhoan);
-        }
-        [Route("SuaThongTin")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult SuaThongTin(TaiKhoan taiKhoan)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(taiKhoan).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("ThongTinTaiKhoan", "Home",taiKhoan.TenTaiKhoan);
-                //"ThongTinTaiKhoan", "Home", taiKhoan.TenTaiKhoan
-            }
-            return View(taiKhoan);
-        }
         public IActionResult Privacy()
         {
             return View();
@@ -56,6 +47,5 @@ namespace WebPhimBTL.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace WebPhimBTL.Models;
 
@@ -12,7 +11,6 @@ public partial class TPhim
     public int? MaTheLoai { get; set; }
 
     public int? MaDaoDien { get; set; }
-
     public int? PhuDe { get; set; }
 
     public string? Anh { get; set; }
@@ -22,16 +20,14 @@ public partial class TPhim
     public int? MaTrangThai { get; set; }
 
     public string? MoTa { get; set; }
-
+    [RegularExpression("^[a-zA-Z]*$", ErrorMessage = "e002")]
     public string? QuocGia { get; set; }
 
     public int? MaHinhThuc { get; set; }
-
+    [Range(1, 120)]
     public int? GioiHanDoTuoi { get; set; }
 
     public int? MaTrailer { get; set; }
-
-    public int? IsDeleted { get; set; }
 
     public virtual ICollection<Comment> Comments { get; } = new List<Comment>();
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace WebPhimBTL.Models;
 
@@ -39,7 +37,7 @@ public partial class DbphimContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-K3PBCIJ;Initial Catalog=DBPhim;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+        => optionsBuilder.UseSqlServer("Data Source=PC\\ManhQuang;Initial Catalog=DBPhimUpdate;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -96,7 +94,6 @@ public partial class DbphimContext : DbContext
             entity.ToTable("Episode");
 
             entity.Property(e => e.Duonglink).HasMaxLength(500);
-            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
 
             entity.HasOne(d => d.MaPhimNavigation).WithMany(p => p.Episodes)
                 .HasForeignKey(d => d.MaPhim)
@@ -119,7 +116,6 @@ public partial class DbphimContext : DbContext
             entity.ToTable("tPhim");
 
             entity.Property(e => e.Anh).HasMaxLength(300);
-            entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
             entity.Property(e => e.NgayKhoiChieu).HasColumnType("datetime");
             entity.Property(e => e.QuocGia).HasMaxLength(50);
             entity.Property(e => e.TenPhim).HasMaxLength(100);
